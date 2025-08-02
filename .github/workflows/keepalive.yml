@@ -1,0 +1,22 @@
+name: Keep Render Apps Awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping FastAPI /healthz
+        run: |
+          curl -fsS -m 10 https://email-automation-ko-project.onrender.com/healthz || exit 1
+      - name: Ping FastAPI /docs
+        run: |
+          curl -fsS -m 10 https://email-automation-ko-project.onrender.com/docs || exit 1
+      
+      - name: Ping n8n (editor root)
+        run: |
+          curl -fsS -m 10 https://email-automation-n8n.onrender.com/ || exit 0
